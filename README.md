@@ -8,7 +8,7 @@
 # 
 Vue2.x 使用 Options API   
 Vue3 使用 Composition API（组合API）
-![img](/src/assets/optionsAPI_compositionAPI.jpg)
+![img](./src/assets/optionsAPI_compositionAPI.jpg)
 
 
 体验
@@ -58,7 +58,7 @@ import {
 ```
 
 ## [生命周期](/src/components/LifeCycle)
-![img](/src/assets/hook.jpg)
+![img](./src/assets/hook.jpg)
 
 
 ## setup()
