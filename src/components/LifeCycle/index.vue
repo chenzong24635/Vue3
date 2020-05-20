@@ -43,7 +43,8 @@
 <script>
 
 /**
- * setup 函数是个新的入口函数，初始化状态，相当于 vue2.x 中 beforeCreate 和 created，在 beforeCreate 之后 created 之前执行。
+ * setup 函数是个新的入口函数，初始化状态，
+ * 相当于 vue2.x 中 beforeCreate 和 created，在 beforeCreate 和 created 之前执行。
  * setup接受两个参数，第一个参数是props(默认是响应式)， 另一个参数是context，
  *  >return 返回数据和方法
  * 
@@ -75,12 +76,12 @@ import {
 } from 'vue'
 
 export default {
-  beforeCreate(){
+  /* beforeCreate(){
     console.log('beforeCreate');
   },
   created(){
     console.log('created');
-  },
+  }, */
   setup(props,context) {
     console.log(props,context); // context: {attrs, slots, emit}
     const num = ref(0)

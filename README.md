@@ -4,6 +4,9 @@
 [Vue RFCs](https://github.com/vuejs/rfcs/blob/function-apis/active-rfcs)
 
 [抄笔记：尤雨溪在Vue3.0 Beta直播里聊到了这些…](https://juejin.im/post/5e9f6b3251882573a855cd52)
+[尤雨溪在Vue3.0 Beta直播同步更新 | Vue3新特性一篇搞懂](https://juejin.im/post/5e6388366fb9a07cda097c47)
+[Vue3 究竟好在哪里？（和 React Hook 的详细对比）](https://juejin.im/post/5e9ce011f265da47b8450c11)
+
 
 # 
 Vue2.x 使用 Options API   
