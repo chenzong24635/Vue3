@@ -1,14 +1,11 @@
 <template>
   <div>
-    index1
-    {{num}}
   </div>
 </template>
 
 <script>
 
 import {
-  ref,
   onBeforeMount,
   onMounted,
   onBeforeUpdate,
@@ -23,7 +20,6 @@ import {
 export default {
   setup() {
     console.log('--------');
-    const num = ref(0)
     console.log('setup');
     
     onBeforeMount(() => {
@@ -57,10 +53,6 @@ export default {
     onRenderTriggered(() => {
       console.log('onRenderTriggered', '')
     })
-
-    return {
-      num
-    }
   }
 }
 </script>

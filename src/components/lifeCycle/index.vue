@@ -2,8 +2,9 @@
   <div class="content">
     <p>{{num}}</p>
     <button @click="add">add</button>
+    <p>----</p>
     <div>
-      <router-link to="/LifeCycle1">LifeCycle1</router-link>
+      <router-link to="/LifeCycle1">查看组件销毁</router-link>
     </div>
     <!-- 生命周期调用顺序 -->
 
