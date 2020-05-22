@@ -7,24 +7,21 @@
 </template>
 <script>
 import myChild from './child.vue'
-import { provide, toRefs, reactive } from 'vue'
+import { provide, ref } from 'vue'
 
 export default {
   components: {myChild},
   setup () {
-    const state = reactive({
-      age: 11,
-    })
-    // state.age++
-    provide('myprovide',state.age)
-
+    const age = ref(0)
+    provide('myprovide',43)
+    provide('myprovide1',age) //响应式的
     let methods = {
       add() {
-        state.age++
+        age.value++
       }
     }
     return {
-      ...toRefs(state),
+      age,
       ...methods
     }
   }

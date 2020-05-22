@@ -15,12 +15,13 @@
 <script>
 /** 
  * ref : 创建一个响应式的数据对象 ,通过 .value 获取值
- * reactive: 创建响应式数据对象
+ * reactive: 创建响应式数据对象 //相当于2.x的Vue.observable()
  * toRefs: 将 reactive 创建的对象展开为ref
  * toRef： 将 reactive 创建的对象的某个属性展开为ref
  * isRef: 检查值是否是 ref 生成的响应式数据对象
+ * isProxy: 检查对象是否是由reactive或readonly创建的
  * isReactive: 检查值是否是 reactive 生成的响应式数据对象
- * readonly: 只读
+ * readonly: 设置为只读
 */
 import {
   ref, 
@@ -30,6 +31,7 @@ import {
   isRef, 
   isReactive, 
   readonly, 
+  isProxy,
   onMounted
 } from 'vue'
 
@@ -51,10 +53,12 @@ export default {
 
     // const {age} = toRefs(state)  //通过 toRefs 转换成可观察的响应式 Ref 对象
     const age = toRef(state, 'age')//通过 toRef 转换
-    console.log(age, isRef(age)); // {value: 11,_isRef: true} , true
+    console.log('age：',age, isRef(age)); // {value: 11,_isRef: true} , true
 
-    console.log(isReactive(state)); // true
-    console.log(isReactive(readonlyState)); // true
+    console.log('isReactive(state)：',isReactive(state)); // true
+    console.log('isReactive(readonlyState):',isReactive(readonlyState)); // true
+    console.log('isProxy(state)：',isProxy(state)); // true
+    console.log('isProxy(readonlyState)：',isProxy(readonlyState)); // true
     console.log(isReactive(phone),isRef(phone)); //false true
 
     const methods = {
@@ -74,7 +78,7 @@ export default {
     })
 
     return {
-      phone,
+      phone, //ref作为渲染上下文（从中返回的对象setup()）的属性返回并在模板中进行访问时 它会自动展开为内部值。无需在模板中追加 .value
       readonlyState,
       age,
       ...toRefs(state),

@@ -8,49 +8,54 @@ const routes = [
     component: Home
   },
   {
-    path: '/LifeCycle',
-    name: 'LifeCycle',
-    component: () => import(/* webpackChunkName: "LifeCycle" */ '@/components/LifeCycle/index.vue')
+    path: '/setup',
+    name: 'setup',
+    component: () => import(/* webpackChunkName: "setup" */ '@/components/setup/index.vue')
   },
   {
-    path: '/LifeCycle1',
-    name: 'LifeCycle1',
-    component: () => import(/* webpackChunkName: "LifeCycle" */ '@/components/LifeCycle/index1.vue')
+    path: '/lifeCycle',
+    name: 'lifeCycle',
+    component: () => import(/* webpackChunkName: "lifeCycle" */ '@/components/lifeCycle/index.vue')
   },
   {
-    path: '/GetCurrentInstance',
-    name: 'GetCurrentInstance',
-    component: () => import(/* webpackChunkName: "GetCurrentInstance" */ '@/components/GetCurrentInstance/index.vue')
+    path: '/lifeCycle1',
+    name: 'lifeCycle1',
+    component: () => import(/* webpackChunkName: "lifeCycle1" */ '@/components/lifeCycle/index1.vue')
   },
   {
-    path: '/Reactive',
-    name: 'Reactive',
-    component: () => import(/* webpackChunkName: "Reactive" */ '@/components/Reactive/index.vue')
+    path: '/getCurrentInstance',
+    name: 'getCurrentInstance',
+    component: () => import(/* webpackChunkName: "getCurrentInstance" */ '@/components/getCurrentInstance/index.vue')
   },
   {
-    path: '/Props_Emit',
-    name: 'Props_Emit',
-    component: () => import(/* webpackChunkName: "Props_Emit" */ '@/components/Props_Emit/index.vue')
+    path: '/reactive',
+    name: 'reactive',
+    component: () => import(/* webpackChunkName: "reactive" */ '@/components/reactive/index.vue')
   },
   {
-    path: '/Provide_Inject',
-    name: 'Provide_Inject',
-    component: () => import(/* webpackChunkName: "Provide_Inject" */ '@/components/Provide_Inject/index.vue')
+    path: '/props-emit',
+    name: 'props-emit',
+    component: () => import(/* webpackChunkName: "props-emit" */ '@/components/props-emit/index.vue')
   },
   {
-    path: '/Computed',
-    name: 'Computed',
-    component: () => import(/* webpackChunkName: "Computed" */ '@/components/Computed/index.vue')
+    path: '/provide-inject',
+    name: 'provide-inject',
+    component: () => import(/* webpackChunkName: "provide-inject" */ '@/components/provide-inject/index.vue')
   },
   {
-    path: '/Watch',
-    name: 'Watch',
-    component: () => import(/* webpackChunkName: "Watch" */ '@/components/Watch/index.vue')
+    path: '/computed',
+    name: 'computed',
+    component: () => import(/* webpackChunkName: "computed" */ '@/components/computed/index.vue')
   },
   {
-    path: '/Mixins',
-    name: 'Mixins',
-    component: () => import(/* webpackChunkName: "Mixins" */ '@/components/Mixins/index.vue')
+    path: '/watch',
+    name: 'watch',
+    component: () => import(/* webpackChunkName: "watch" */ '@/components/watch/index.vue')
+  },
+  {
+    path: '/mixins',
+    name: 'mixins',
+    component: () => import(/* webpackChunkName: "mixins" */ '@/components/mixins/index.vue')
   },
 ]
 

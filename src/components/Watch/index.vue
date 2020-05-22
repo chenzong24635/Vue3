@@ -16,7 +16,7 @@
  * watch : 创建 watch 监听
  * watchEffect : 如果响应性的属性改变，就会触发这个函数
 */
-import { reactive, toRefs, watch, watchEffect } from 'vue'
+import { ref, reactive, toRefs, watch, watchEffect } from 'vue'
 
 export default {
   setup() {
@@ -27,12 +27,16 @@ export default {
         arr: [1,2,3]
       }
     })
+    const number = ref(0)
+    console.log(number);
 
     state.age = 666
 
-    //监听某个响应对象 
+    //监听某个响应对象
+    
     const stopWatch = watch(
-      () => state.age,
+      // number, // 直接是ref
+      () => state.age, //返回值的getter函数
       (val, prevVal) => {
         console.log(`watch: age 当前值 ${val}; 改变前的值 ${prevVal}`)
       },
@@ -54,9 +58,6 @@ export default {
         console.log("age:",age,"prev age",prevage)
         console.log("obj:",obj,"prev obj",prevobj)
       },
-      {
-        lazy: true
-      }
     ) */
 
     //watchEffect
@@ -73,10 +74,10 @@ export default {
         state.obj.arr.push(444)
       },
       handleStopWatch(){
-        stopWatch()
+        stopWatch() //停止watch
       },
       handleStopWatchEffect(){
-        stopWatchEffect()
+        stopWatchEffect() //停止watchEffect
       }
     }
 

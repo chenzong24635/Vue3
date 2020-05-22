@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <p>{{num}}</p>
     <button @click="add">add</button>
     <div>
@@ -43,14 +43,9 @@
 <script>
 
 /**
- * setup 函数是个新的入口函数，初始化状态，
- * 相当于 vue2.x 中 beforeCreate 和 created，在 beforeCreate 和 created 之前执行。
- * setup接受两个参数，第一个参数是props(默认是响应式)， 另一个参数是context，
- *  >return 返回数据和方法
- * 
- * 生命周期钩子变更
- * beforeCreate -> 请使用 setup()
- * created -> 请使用 setup()
+ * 2.x生命周期选项和Composition API之间的映射
+ * beforeCreate -> 使用 setup()
+ * created -> 使用 setup()
  * beforeMount -> onBeforeMount
  * mounted -> onMounted
  * beforeUpdate -> onBeforeUpdate
@@ -58,8 +53,10 @@
  * beforeDestroy -> onBeforeUnmount
  * destroyed -> onUnmounted
  * errorCaptured -> onErrorCaptured
- * onRenderTracked,
- * onRenderTriggered,
+ * onRenderTracked, 新增
+ * onRenderTriggered, 新增
+ * 
+ * 两个新增的钩子都接收DebuggerEvent类似于onTrack和onTrigger观察者的选项：
  */
 import {
   ref,
@@ -82,10 +79,8 @@ export default {
   created(){
     console.log('created');
   }, */
-  setup(props,context) {
-    console.log(props,context); // context: {attrs, slots, emit}
+  setup() {
     const num = ref(0)
-
     console.log('setup');
 
     onBeforeMount(() => {
@@ -133,4 +128,7 @@ export default {
   }
 }
 </script>
+<style lang="less">
+
+</style>
 

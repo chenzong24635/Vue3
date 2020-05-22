@@ -1,11 +1,10 @@
 <template>
-<!-- https://juejin.im/post/5d1955e3e51d4556d86c7b09 -->
   <div class="test">
     {{x}}--{{y}}
   </div>
 </template>
 
-<script>
+<script >
 import { ref, onMounted, onUnmounted } from 'vue'
 
 export  default{
