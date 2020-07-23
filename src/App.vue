@@ -36,12 +36,12 @@ export default {
 
 #nav {
   padding: 30px 0;
-
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
   a {
-    display: block;
-    margin: 10px 0;
+    padding: 10px;
     font-weight: bold;
-
     &.router-link-exact-active {
       color: #42b983;
     }

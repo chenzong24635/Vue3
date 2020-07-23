@@ -5,12 +5,13 @@
 
 [Vue RFCs](https://github.com/vuejs/rfcs)
 
-[抄笔记：尤雨溪在Vue3.0 Beta直播里聊到了这些…](https://juejin.im/post/5e9f6b3251882573a855cd52)
-[尤雨溪在Vue3.0 Beta直播同步更新 | Vue3新特性一篇搞懂](https://juejin.im/post/5e6388366fb9a07cda097c47)
-[Vue3 究竟好在哪里？（和 React Hook 的详细对比）](https://juejin.im/post/5e9ce011f265da47b8450c11)
-[尤大Vue3.0直播虚拟Dom总结(和React对比)](https://juejin.im/post/5e9faa8fe51d4546fe263eda)
+[抄笔记：尤雨溪在Vue3.0 Beta直播里聊到了这些…](https://juejin.im/post/5e9f6b3251882573a855cd52)  
+[尤雨溪在Vue3.0 Beta直播同步更新 | Vue3新特性一篇搞懂](https://juejin.im/post/5e6388366fb9a07cda097c47)  
+[Vue3 究竟好在哪里？（和 React Hook 的详细对比）](https://juejin.im/post/5e9ce011f265da47b8450c11)  
+[尤大Vue3.0直播虚拟Dom总结(和React对比)](https://juejin.im/post/5e9faa8fe51d4546fe263eda)  
+[vue 3.x 如何有惊无险地快速入门](https://juejin.im/post/5ec537486fb9a047bb6a4204)  
 
-[](https://juejin.im/post/5ec537486fb9a047bb6a4204)
+
 
 # 
 Vue2.x 使用 Options API   
@@ -37,7 +38,11 @@ const App = createComponent({
 })
 ```
 
-
+## Tree-shaking
+在 vue 3 中不会把所有的 api 都打包进来，只会 打包你用到的 api
+```js
+import { computed, watch } from 'vue'
+```
 
 ## Vue3基础API
 ```js
@@ -130,7 +135,10 @@ vue3
 * 不再限于模板中的单个根节点
 * render 函数也可以返回数组了，类似实现了 React.Fragments 的功能 
 
-## 获取路由
+## 路由
+[Vue3中 router 带来了哪些变化？](https://segmentfault.com/a/1190000022582928)
+
+### getCurrentInstance获取路由参数
 ```js
 import { getCurrentInstance } from 'vue'
 
@@ -142,13 +150,96 @@ export default {
 }
 ```
 
-## 获取 Vuex 状态
+### useRouter获取路由
+```js
+import { useRouter } from 'vue-router';
+export default {
+  setup () {
+    const router = useRouter()
+    console.log(router); //路由属性，方法
+    console.log(router.currentRoute.value); //当前的路由页面参数
+  }
+}
+
+```
+
+### router-link 添加了 scoped-slot ，添加 custom prop 以完全支持自定义的 router-link 渲染
+在 vue2-router 中，想要将 roter-link 渲染成某种标签，例如 button，需要这么做：
+```html
+<router-link to="/" tag="button">按钮</router-link>
+!-- 渲染结果 -->
+<button>按钮</button>
+```
+
+如今
+```html
+<router-link to="/" custom v-slot="{ navigate, isActive, isExactActive }">
+  <button role="link" @click="navigate" :class="{ active: isActive, 'exact-active': isExactActive }">
+    按钮
+  </button>
+<router-link>
+!-- 渲染结果 -->
+<button role="link">按钮</button>
+```
+
+
+### [动态路由](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0029-router-dynamic-routing.md)
+添加了几个方法  
+* router.addRoute(route: RouteRecord) 动态添加路由  
+* router.removeRoute(name: string | symbol)，动态删除路由  
+* router.hasRoute(name: string | symbol): boolean ，判断路由是否存在  
+* router.getRoutes(): RouteRecord[] 获取路由列表  
+
+
+### 路由模式 mode
+由原来的 mode: "history" 更改为 history: createWebHistory()
+```js
+// vue2-router
+const router = new VueRouter({
+  mode: 'history',
+  // base: __dirname,
+  ...
+})
+
+// vue-next-router
+import { createRouter, createWebHistory } from 'vue-next-router'
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  // history: createWebHistory('/'),
+  ...
+})
+```
+
+#### 捕获所有路由 ( /* ) 时，现在必须使用带有自定义正则表达式的参数进行定义：/:catchAll(.*)
+```js
+// vue2-router
+const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    { path: '/user/:a*' },
+  ],
+})
+
+
+// vue-next-router
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/user/:a:catchAll(.*)', component: component },
+  ],
+})
+```
+当路由为 /user/a/b 时，捕获到的 params 为 {"a": "a", "catchAll": "/b"}。
+
+## Vuex
 ```js
 import { computed, getCurrentInstance } from 'vue'
 
 export default {
   setup () {
     const { ctx } = getCurrentInstance()
+    console.log(ctx.$store);//undefinde 直接获取得不到$store
+    // 需通过计算属性使用 Vuex 状态
     const isLogin = computed(() => ctx.$store.state.isLogin)
     console.log(isLogin);
 
@@ -164,8 +255,24 @@ export default {
 }
 ```
 
+ useStore的 Vuex 状态
+```js
+import { useStore } from 'vuex'
+export default {
+  setup () {
+    const store = useStore()
+    console.log(store);
+  }    
+```
+
 
 ## 多个v-model同时使用
+
+## 异步组件 defineAsyncComponent
+```js
+import { defineAsyncComponent } from "vue"
+const AsyncFoo = defineAsyncComponent(() => import("./Foo.vue"))
+```
 
 ## Suspense组件
 * 可在嵌套层级中等待嵌套的异步依赖项
@@ -173,7 +280,7 @@ export default {
 * 支持异步组件
 
 
-## Teleport
+## [Teleport](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0025-teleport.md)
 \<Teleport\>原先是对标 React Portal（增加多个新功能，更强）
 
 但因为Chrome有个提案，会增加一个名为Portal的原生element，为避免命名冲突，改为Teleport
@@ -183,7 +290,84 @@ Teleport是特殊的组件，旨在在当前组件之外呈现某些内容。这
 
 vue2需通过portal-vue库实现
 
-# 标签嵌套问题
+## meta 合并
+```js
+{
+  path: '/parent',
+  meta: { requiresAuth: true, isChild: false },
+  children: [
+    { path: 'child', meta: { isChild: true }}
+  ]
+}
+```
+当访问 /parent/child 时，子路由中的 meta 如下：  
+```{ requiresAuth: true, isChild: true }```
 
-# 未定义属性问题
+合并策略与 Object.assign 类似
+
+## v-model
+可绑定多个 v-model
+
+```html
+<InviteeForm
+  v-model:name="inviteeName"
+  v-model:email="inviteeEmail"
+/>
+```
+其实上面这种方式就相当于之前的 .sync 
+
+额外处理
+```html
+<InviteeForm
+   v-model:foo.trim="text"
+   v-model:bar.number="number" />
+```
+
+## 指令动态参数
+指令名，事件名，插槽名，都可以使用变量来定义
+```html
+<div :[key]="value"></div>
+<div @[event]="handler"></div>
+<template #[name]>
+    Default slot
+  </template>
+```
+
+## 样式 scoped
+旧版本写法
+```css
+/* 深度选择器 */
+/*方式一：*/
+>>> .foo{ }
+/*方式二：*/
+/deep/ .foo{ }
+/*方式三*/
+::v-deep .foo{ }
+```
+
+新版本写法
+```css
+/* 深度选择器 */
+::v-deep(.foo) {}
+```
+
+除了上面的深度选择器外，还有下面的两个，写法也差不多。
+```css
+/* slot content 起作用 */
+::v-slotted(.foo) {}
+
+/* 全局 */
+::v-global(.foo) {}
+```
+
+## 未定义属性问题
+
+
+
+## 废弃
+* filters
+* keycode
+* inline-template
+* data-object
+* on,off 和 $once
 

@@ -11,7 +11,7 @@ export default Vuex.createStore({
     setUserAge(state, val){
       state.user.age = val
       console.log(state, val);
-    }
+    },
   },
   actions: {
   },
