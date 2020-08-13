@@ -10,12 +10,6 @@
 
 <script>
 
-/**
- * setup 充当在组件内部使用Composition API的入口点。
- * setup创建组件实例时，在初始道具解析后立即调用。在生命周期方面，它在beforeCreate挂接之前被调用。
- * setup接受两个参数，第一个参数是props(默认是响应式)， 另一个参数是context，
- *  >return 返回一个对象,返回数据和方法
- */
 import {
   h,
   reactive,

@@ -1,28 +1,26 @@
 <template>
-  <div id="app">
     <div id="nav">
-      <!-- <router-link to="/">Home</router-link> | -->
-      
-      <router-link to="/setup">setup</router-link>
-      <router-link to="/lifeCycle">lifeCycle</router-link>
-      <router-link to="/reactive"> ref, reactive, toRefs, isRef, readonly</router-link>
-      <router-link to="/props-emit">props-emit</router-link>
-      <router-link to="/provide-inject">provide-inject</router-link>
-      <router-link to="/computed">computed</router-link>
-      <router-link to="/watch">watch</router-link>
-      <router-link to="/mixins">mixins</router-link>
-      <router-link to="/getCurrentInstance">getCurrentInstance</router-link>
+
+      <router-link 
+        v-for="item in routes"
+        :key="item.name"
+        :to="item.path"
+      >
+        {{item.name}}
+      </router-link>
+
       <p style="border-top:1px solid #ddd"></p>
     </div>
     <router-view/>
-  </div>
 </template>
 <script>
-// import { reactive, watchEffect } from 'vue'
-
+import {routes} from './router/routes'
+import { computed } from 'vue'
 export default {
   setup(){
-    
+    return{
+      routes: computed(()=>routes.filter(item=>!item.meta || !item.meta.hide))
+    }
   }
 }
 </script>
@@ -36,12 +34,12 @@ export default {
 
 #nav {
   padding: 30px 0;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
+
   a {
-    padding: 10px;
+    display: block;
+    margin: 10px 0;
     font-weight: bold;
+
     &.router-link-exact-active {
       color: #42b983;
     }

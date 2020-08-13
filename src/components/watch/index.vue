@@ -11,11 +11,6 @@
   </div>
 </template>
 <script>
-
-/** 
- * watch : 创建 watch 监听
- * watchEffect : 如果响应性的属性改变，就会触发这个函数
-*/
 import { ref, reactive, toRefs, watch, watchEffect } from 'vue'
 
 export default {

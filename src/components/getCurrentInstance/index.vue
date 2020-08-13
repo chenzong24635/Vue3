@@ -9,7 +9,7 @@
 <script>
 // 当前组件的实例
 import { computed, getCurrentInstance } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 export default {
   setup () {
@@ -17,20 +17,18 @@ export default {
     console.log('当前组件的实例', currentInstance)
 
     const {ctx} = currentInstance
-
     const currentRoute = ctx.$router.currentRoute.value
     console.log('组件路由参数',currentRoute);
 
     //路由
-    const route = useRoute()//对应this.$route
-    const router = useRouter() //对应this.$router
-    console.log(route);
-    console.log(router);
+    const router = useRouter()
+    console.log(router.currentRoute.value);
     console.log(router.currentRoute.value == currentRoute); //true
 
-    console.log(ctx.$store);//undefinde 直接获取不到$store
-    // 需通过计算属性使用 Vuex 状态
+    // ctx的 通过计算属性使用 Vuex 状态
     const storeState = computed(() => ctx.$store.state)
+    console.log(ctx.$store);//undefinde 直接获取不到$store
+    // console.log(ctx.$store.state.user);// 会报错，因为 ctx.$store 为undefined，没有 state 属性
     console.log(storeState);
 
     // useStore的 Vuex 状态

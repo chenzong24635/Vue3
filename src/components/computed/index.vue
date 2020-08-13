@@ -20,7 +20,7 @@ export default {
 
     //computed--函数的方式
     const count = computed(()=> 'age:' + state.age)
-
+    console.log(count);
     //computed--对象自定义get set的形式
     const userMsg = computed({
       get(){

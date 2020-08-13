@@ -2,7 +2,8 @@ const path = require('path');
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
-console.log(process.env);
+console.log(process.env.NODE_ENV)
+console.log(process.env.NODE_ENV === 'production' ?  './': '/')
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ?  './': '/',
   productionSourceMap: false,
