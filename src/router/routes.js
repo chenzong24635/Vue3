@@ -19,7 +19,8 @@ export const routes = [
   {
     path: '/lifeCycle1',
     name: 'lifeCycle1',
-    component: defineAsyncComponent(() => import('@/components/lifeCycle/index1.vue'))
+    component: defineAsyncComponent(() => import('@/components/lifeCycle/index1.vue')),
+    meta: { hide: true},
   },
   {
     path: '/getCurrentInstance',

@@ -1,12 +1,12 @@
 <template>
   <div class="">
   <!-- router-link 添加 scoped-slot API 和 custom 属性 -->
-  <router-link to="/" custom v-slot="{ href, navigate, isActive }">
+  <router-link to="/store" custom v-slot="{ href, navigate, isActive }">
     <div :class="{ 'active': isActive }">
-      <p>{{href}}</p>
-      <p>{{navigate}}</p>
-      <p>{{isActive}}</p>
-      <a :href="href" @click="navigate">Home</a>
+      <p>href路由路径---:  {{href}}</p>
+      <p>navigate路由跳转函数--:  <code>{{navigate}}</code></p>
+      <p>isActive路由是否激活--:  {{isActive}}</p>
+      <a :href="href" @click="navigate">跳到store页面</a>
     </div>
   </router-link>
   </div>

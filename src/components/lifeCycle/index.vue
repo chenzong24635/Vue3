@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <p>{{num}}</p>
-    <button @click="add">add</button>
+    <button @click="add">查看数据更新</button>
     <p>----</p>
     <div>
       <router-link to="/LifeCycle1">查看组件销毁</router-link>
@@ -25,12 +25,12 @@ import {
 } from 'vue'
 
 export default {
-  /* beforeCreate(){
+  beforeCreate(){
     console.log('beforeCreate');
   },
   created(){
     console.log('created');
-  }, */
+  },
   setup() {
     const num = ref(0)
     console.log('setup');

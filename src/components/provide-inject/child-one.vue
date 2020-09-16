@@ -6,6 +6,7 @@
 <script>
 import {inject} from 'vue'
 export default {
+
   setup() {
     let myprovide = inject('myprovide')
     return {

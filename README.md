@@ -185,7 +185,10 @@ import {
 生命周期调用顺序 
 ```js
 // 创建
+
 setup ->
+beforeCreate ->
+created ->
 onRenderTracked ->
 onBeforeMount ->
 onRenderTracked ->
@@ -210,10 +213,6 @@ onUpdated ->
 新 onMounted  ->
 ```
 
-
-![img](./src/assets/hook.jpg)
-
-
 ## [setup()](/src/components/setup/index.vue)
 * setup 是 vue3 中统一的入口函数,所有生命周期函数定义都是需要定义在次函数下才生效
 * setup函数会在 beforeCreate之后 created之前执行
@@ -226,6 +225,7 @@ onUpdated ->
 setup(props,context){
   //组件参数 上下文对象
   console.log(props,context)// {attrs, slots, emit}
+  return {}
 } 
 ```
 
@@ -312,7 +312,7 @@ v2
 ```js
 {
   mode: 'hash'
-  mode: 'history'
+  // mode: 'history'
 }
 ```
 
@@ -336,7 +336,7 @@ const router = createRouter({
 ### 路由匹配所有
 ```js
 {
-  // vue2为  *
+  // vue2为  path: '*',
   path: '/:catchAll(.*)',
   name: '404',
   component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue')

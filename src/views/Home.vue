@@ -1,15 +1,18 @@
 <template>
   <div class="test">
-    {{x}}--{{y}}
   </div>
 </template>
 
 <script >
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export  default{
+export default {
+
+
   setup() {
     const { x, y } = useMouse()
+
+    
     return { x, y }
   }
 }

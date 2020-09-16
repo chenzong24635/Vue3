@@ -13,8 +13,8 @@ import {
   onBeforeUnmount,
   onUnmounted,
   onErrorCaptured,
-  onRenderTracked,
-  onRenderTriggered,
+  // onRenderTracked,
+  // onRenderTriggered,
 } from 'vue'
 
 export default {
@@ -47,12 +47,12 @@ export default {
       console.log('onErrorCaptured')
     })
 
-    onRenderTracked(() => {
-      console.log('onRenderTracked', '')
-    })
-    onRenderTriggered(() => {
-      console.log('onRenderTriggered', '')
-    })
+    // onRenderTracked(() => {
+    //   console.log('onRenderTracked', '')
+    // })
+    // onRenderTriggered(() => {
+    //   console.log('onRenderTriggered', '')
+    // })
   }
 }
 </script>
