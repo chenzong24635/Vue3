@@ -26,11 +26,10 @@ export default {
 
     state.age = 666
 
-    // watch与Vue2.0中的$watch用法基本是一模一样的
     // watch监听某个响应对象
     const stopWatch = watch(
-      number, // 直接是ref
-      // () => state.age, //返回值的getter函数
+      number, // 直接监听ref
+      // () => state.age, //监听一个 getter
       // () => state.obj,
       (val, prevVal) => {
         console.log(`watch: 新值： ${val}; 旧值： ${prevVal}`)
@@ -42,7 +41,7 @@ export default {
     )
 
     //监听多个响应对象
-    watch(
+    const stopWatch1 = watch(
       [
         () => state.age,
         () => state.obj,
@@ -51,8 +50,8 @@ export default {
         [age, obj],
         [prevage, prevobj],
       ) => {
-        console.log("age:",age,"prev age",prevage)
-        console.log("obj:",obj,"prev obj",prevobj)
+        console.log("watch--- age:",age,"prev age",prevage)
+        console.log("watch--- obj:",obj,"prev obj",prevobj)
       },
       {
         deep: true // 是否触发深度监听
@@ -62,9 +61,18 @@ export default {
     // watchEffect
     // 与watch有所不同，watchEffect会传入一个函数，然后立即执行这个函数，
     // 对于函数里面的响应式依赖会进行监听，然后当依赖发生变化时，会重新调用传入的函数
-    const stopWatchEffect = watchEffect(() => {
-      console.log('watchEffect ', state.age)
-    })
+    const stopWatchEffect = watchEffect(
+      () => {
+        console.log('watchEffect--- age:', state.age)
+      },
+      {
+        flush: 'post', //在组件更新后重新运行侦听器副作用
+        // onTrigger(e) { // 侦听器调试
+        //   console.log(e);
+        //   debugger
+        // }
+      }
+    )
     
 
     const methods = {
@@ -78,6 +86,7 @@ export default {
       },
       handleStopWatch(){
         stopWatch() //取消watch监听
+        stopWatch1() //取消watch监听
       },
       handleStopWatchEffect(){
         stopWatchEffect() //取消watchEffect监听

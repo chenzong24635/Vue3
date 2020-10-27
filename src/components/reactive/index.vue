@@ -34,7 +34,7 @@ export default {
       age: 11,
     })
 
-    const readonlyState = readonly(state)
+    const readonlyState = readonly(state) //只读
 
     const phone = ref(18888888888)
     phone.value = 1222222
@@ -67,7 +67,7 @@ export default {
     }
 
     const refA = ref(null) // 获取组件
-    // 必须return refA，组件必须绑定ref属性(ref="refA")
+    // 必须在最后return refA，组件必须绑定ref属性(ref="refA")
     onMounted(() => {
       //获取子组件实例，调用其内部函数
       console.log(1,refA)

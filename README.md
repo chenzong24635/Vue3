@@ -1,10 +1,11 @@
 
 官方
-[vue3-beta源码](https://github.com/vuejs/vue-next)
-[Vue RFCs](https://github.com/vuejs/rfcs)
 
 [composition-api手册](https://composition-api.vuejs.org/zh/api.html)
-[Vue3最新的Beta版本-文档](https://v3.vuejs.org/guide/installation.html)
+[Vue3文档](https://v3.cn.vuejs.org/guide)
+[Vue3文档-en](https://v3.vuejs.org/guide/installation.html)
+[vue3-beta源码](https://github.com/vuejs/vue-next)
+[Vue RFCs](https://github.com/vuejs/rfcs)
 
 [vue3模板编译在线体验](https://vue-next-template-explorer.netlify.app/)
 
@@ -38,18 +39,18 @@
 * SSR速度提高了2~3倍。
 
 ### Tree shaking support
-* 可以将无用模块“剪辑”，仅打包需要的
+* 可以将无用模块“剪辑”，仅打包需要的模块
 * 一个简单“HelloWorld”大小仅为：13.5kb
   * 使用Composition API，仅11.75kb，
 * 包含运行时完整功能：22.5kb
   * 拥有更多的功能，却比Vue 2更迷你。
 
 ```js
-<!-- vue 2.x -->
+// vue 2.x
 import Vue from 'vue'
 
-<!-- vue 3.x -->
-import {ref,computed} from 'vue'
+// vue 3.x
+import {xxx,xxx} from 'vue'
 ```
 
 ### Composition API
@@ -59,18 +60,18 @@ import {ref,computed} from 'vue'
 
 混入(mixin) 将不再作为推荐使用， Composition API可以实现更灵活且无副作用的复用代码。
 
-### Fragment、\<Teleport>、
-Fragment 碎片
+### Fragment、\<Teleport>、\<Suspense>
+`Fragment 碎片`
 * 不再限于模板中的单个根节点
 * render 函数也可以返回数组了，类似实现了 React.Fragments 的功能 
 
-\<Teleport> 传送门
+`\<Teleport> 传送门`
 
 * 旨在在当前组件之外呈现某些内容。这也是这是处理模态框、弹出窗口和通常显示在页面顶部的组件的一种非常好的方法。
 * 原称为\<Portal>，因为Chrome有个提案，会增加一个名为Portal的原生element，为避免命名冲突，改为Teleport
 
 
-\<Suspense> 悬念
+`\<Suspense> 悬念`
 * 可在嵌套层级中等待嵌套的异步依赖项
 * 支持async setup()
 * 支持异步组件
@@ -114,20 +115,14 @@ import { createApp, createComponent } from 'vue'
 const App = createComponent({
   components: { Counter },
   template: `
-      <div class="container">
-          <h3>计数器示例</h3>
-          <Counter />
-      </div>
+    <div class="container">
+        <h3>计数器示例</h3>
+        <Counter />
+    </div>
   `
 })
 ```
-## 全局API 挂载到了app实例上
-v3.x 调用createApp返回一个新的vue实例
-```js
-import { createApp } from 'vue'
-const app = createApp()
-```
-
+## [应用配置/ 应用API / 全局API](https://v3.cn.vuejs.org/api/application-config.html)
 |2.x Global API| 3.x Instance API(app)
 |:--|:--
 |Vue.config | app.config
@@ -138,6 +133,158 @@ const app = createApp()
 |Vue.mixin|app.mixin
 |Vue.use|app.use
 
+* [createApp](https://v3.cn.vuejs.org/api/global-api.html#createapp) 创建一个新的vue实例
+
+```js
+import { createApp } from 'vue'
+const app = createApp()
+
+// app.use
+// app.component
+// app.directive
+// app.mixin
+// app.config
+....
+```
+
+在应用之间共享配置 (如组件或指令)
+
+Foo 和 Bar 实例及其后代中都可以使用 focus 指令
+```js
+import { createApp } from 'vue'
+import Foo from './Foo.vue'
+import Bar from './Bar.vue'
+
+const createMyApp = options => {
+  const app = createApp(options)
+  app.directive('focus' /* ... */)
+  return app
+}
+
+createMyApp(Foo).mount('#foo')
+createMyApp(Bar).mount('#bar')
+```
+
+* [globalProperties](https://v3.cn.vuejs.org/api/application-config.html#globalproperties)--挂载全局方法属性
+```js
+// Vue 2.x
+Vue.prototype.$http = xxx
+
+// Vue 3.x
+const app = Vue.createApp({})
+app.config.globalProperties.$http = xxx
+
+```
+注意，不可再setup里直接通过this调用，无法访问到 this，会返回undefined；
+```js
+setup() {
+  const {ctx} = getCurrentInstance()
+  console.log(ctx.$api);
+}
+```
+
+也可在vue2.x的生命周期里调用如created,mounted等
+
+* [nextTick](https://v3.cn.vuejs.org/api/global-api.html#nexttick) 将回调推迟到下一个 DOM 更新周期之后执行,即Vue2.x的 this.$nextTick方法
+```js
+import { createApp, nextTick } from 'vue'
+
+const app = createApp({
+  setup() {
+    const message = ref('Hello!')
+    const changeMessage = async newMessage => {
+      message.value = newMessage
+      await nextTick()
+      console.log('Now DOM is updated')
+    }
+  }
+})
+```
+
+* [h](https://v3.cn.vuejs.org/api/global-api.html#h) 返回一个”虚拟节点“，用于手动编写的渲染函数
+
+
+* [defineComponent](https://v3.cn.vuejs.org/api/global-api.html#definecomponent) 从实现上看，defineComponent 只返回传递给它的对象。但是，就类型而言，返回的值有一个合成类型的构造函数，用于手动渲染函数
+```js
+import { defineComponent } from 'vue'
+
+// 具有组件选项的对象
+const MyComponent = defineComponent({
+  data() {
+    return { count: 1 }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
+})
+
+// 或者是一个 setup 函数，函数名称将作为组件名称来使用
+const HelloWorld = defineComponent(function HelloWorld() {
+  const count = ref(0)
+  return { count }
+})
+```
+
+* [defineAsyncComponent](https://v3.cn.vuejs.org/api/global-api.html#defineasynccomponent) 创建一个异步组件
+  
+基本语法  
+```js
+defineAsyncComponent(() => import('xxx.vue')),
+```
+
+高阶用法
+```js
+const AsyncComp = defineAsyncComponent({
+  // 工厂函数
+  loader: () => import('./Foo.vue')
+  // 加载异步组件时要使用的组件
+  loadingComponent: LoadingComponent,
+  // 加载失败时要使用的组件
+  errorComponent: ErrorComponent,
+  // 在显示 loadingComponent 之前的延迟 | 默认值：200（单位 ms）
+  delay: 200,
+  // 如果提供了 timeout ，并且加载组件的时间超过了设定值，将显示错误组件
+  // 默认值：Infinity（即永不超时，单位 ms）
+  timeout: 3000,
+  // 定义组件是否可挂起 | 默认值：true
+  suspensible: false,
+  /**
+   *
+   * @param {*} error 错误信息对象
+   * @param {*} retry 一个函数，用于指示当 promise 加载器 reject 时，加载器是否应该重试
+   * @param {*} fail  一个函数，指示加载程序结束退出
+   * @param {*} attempts 允许的最大重试次数
+   */
+  onError(error, retry, fail, attempts) {
+    if (error.message.match(/fetch/) && attempts <= 3) {
+      // 请求发生错误时重试，最多可尝试 3 次
+      retry()
+    } else {
+      // 注意，retry/fail 就像 promise 的 resolve/reject 一样：
+      // 必须调用其中一个才能继续错误处理。
+      fail()
+    }
+  }
+})
+```
+
+* [resolveComponent](https://v3.cn.vuejs.org/api/global-api.html#resolvecomponent) 解析组件, `只能在 render 或 setup 函数中使用`
+
+如果在当前应用实例中可用(全局组件过或当前页面局部注册的组件)，则允许按名称解析 component。
+
+返回一个 Component。如果没有找到，则返回 undefined。
+```js
+import { resolveComponent } from 'vue'
+render() {
+  const MyComponent = resolveComponent('MyComponent')
+}
+```
+
+* resolveDirective  解析指令`只能在 render 或 setup 函数中使用`
+
+* ...
 
 ## Vue3常用API
 ```js
@@ -150,23 +297,18 @@ import {
   computed, // 创建计算属性
   watch, // 创建watch监听
   getCurrentInstance, // 当前组件的实例
-  // 生命周期钩子
   onBeforeMount,
   onMounted,
   onBeforeUpdate,
   onUpdated,
   onBeforeUnmount,
   onUnmounted,
-  onErrorCaptured,
-  onRenderTracked,
-  onRenderTriggered,
 } from 'vue'
-
 ```
 
 ## [生命周期](/src/components/lifeCycle/index.vue)
 
-* 2.x生命周期选项和Composition API之间的映射
+### 2.x生命周期选项和Composition API之间的映射
 * beforeCreate -> 使用 setup()
 * created -> 使用 setup()
 * beforeMount -> onBeforeMount
@@ -178,11 +320,23 @@ import {
 * errorCaptured -> onErrorCaptured
 * onRenderTracked, 新增
 * onRenderTriggered, 新增
-两个新增的钩子都接收DebuggerEvent类似于onTrack和onTrigger观察者的选项：
+
+两个新增的钩子都接收DebuggerEvent类似于onTrack和onTrigger观察者的选项;它使我们能够知道是什么导致了Vue实例中的重新渲染。
+```js
+onRenderTriggered(()=>{
+  // 检查哪个依赖项导致组件重新呈现
+
+  debugger
+})
+
+// 需要package.json设置
+"rules": {
+  "no-debugger": "off"
+}
+```
 
 
-
-生命周期调用顺序 
+### 生命周期调用顺序 
 ```js
 // 创建
 
@@ -218,12 +372,14 @@ onUpdated ->
 * setup函数会在 beforeCreate之后 created之前执行
 * setup 函数中无法访问到 this
 * setup创建组件实例时，在初始道具解析后立即调用。在生命周期方面，它在beforeCreate挂接之前被调用。
-* setup接受两个参数，第一个参数是props(默认是响应式)， 另一个参数是context(包含attrs, slots, emit)，
-* return 返回一个对象,返回数据和方法
+* setup接受两个参数，
+  * props(默认是响应式)
+  * context(包含attrs, slots, emit) 上下文对象，
+* return 返回一个对象,用于返回数据和方法
 
 ```js
 setup(props,context){
-  //组件参数 上下文对象
+// setup(props,{attrs, slots, emit}){// context解构写法
   console.log(props,context)// {attrs, slots, emit}
   return {}
 } 
@@ -231,21 +387,35 @@ setup(props,context){
 
 ## [ref、reactive、isRef 、toRefs ](/src/components/reactive/index.vue)
 * ref : 创建一个响应式的数据对象 ,通过 .value 获取值,主要是对String,Number,Boolean等基本类型的数据响应
+
 * reactive: 创建响应式数据对象 ,可以观察多个属性//相当于2.x的Vue.observable()
-* readonly: 设置为只读
-* toRefs: 可以将 reactive 创建的可观察对象中的属性都转换成可观察的 Ref 对象，这样一来，即使解构后，也可以被独立进行观察了。
-* toRef： 将 reactive 创建的对象的某个属性展开为ref
+
+* readonly: 设置为只读属性
+
+* toRefs: 将 reactive 创建的对象所有的属性都转换成可观察的 Ref 对象，这样一来，即使解构后，也可以被独立进行观察了。
+
+* toRef： 将 reactive 创建的对象的某个属性转换成可观察的 Ref 对象
+
 * unref: 如果参数是一个 ref 则返回它的 value，否则返回参数本身。它是 val = isRef(val) ? val.value : val 的语法糖。
+
 * isRef: 检查值是否是 ref 生成的响应式数据对象
-* isProxy: 检查对象是否是由reactive或readonly创建的
 * isReactive: 检查值是否是 reactive 生成的响应式数据对象
 * isReadonly: 检查值是否是 只读
+* isProxy: 检查对象是否是由reactive或readonly创建的
 
-```html
-为什么将可观察对象中的属性解构出来后，变成不再可观察了呢？因为通过 reactive 函数创建的可观察对象，内部的属性本身并不是可观察类型的，对他们访问和观察其实都是通过Proxy代理访问来实现的。如果将这些属性解构，这些属性就不再通过原对象的代理来访问了，就无法再进行观察。
+
+`为什么将可观察对象中的属性解构出来后，变成不再可观察了呢？`
+
+因为通过 reactive 函数创建的可观察对象，内部的属性本身并不是可观察类型的，对他们访问和观察其实都是通过Proxy代理访问来实现的。如果将这些属性解构，这些属性就不再通过原对象的代理来访问了，就无法再进行观察,可以使用 toRefs。
+```js
+let state = reactive({num:1})
+return {
+  // ...state 解构后的属性，变成非响应式
+  ...toRefs(state) // 使用toRefs包装成响应式
+}
 ```
 
-[`高级响应式系统API`](https://composition-api.vuejs.org/zh/api.html#%E9%AB%98%E7%BA%A7%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F-api)
+### [`高级响应式系统API`](https://composition-api.vuejs.org/zh/api.html#%E9%AB%98%E7%BA%A7%E5%93%8D%E5%BA%94%E5%BC%8F%E7%B3%BB%E7%BB%9F-api)
 * customRef: 用于自定义一个 ref
 * markRaw: 显式标记一个对象为“永远不会转为响应式代理”，函数返回这个对象本身
 * shallowReactive: 只为某个对象的私有（第一层）属性创建`浅层`的响应式代理
@@ -253,20 +423,101 @@ setup(props,context){
 * shallowRef: 创建一个 ref ，将会追踪它的 .value 更改操作，但是并不会对变更后的 .value 做响应式代理转换（即变更不会调用 reactive）
 * toRaw: 返回由 reactive 或 readonly 方法转换成响应式代理的普通对象
 
-
-
 ## [computed](/src/components/computed/index.vue)
 
 ## [watch，watchEffect](/src/components/watch/index.vue)
 * watch : 创建 watch 监听
 * watchEffect : 如果响应性的属性改变，就会触发这个函数
 
+
+### 与 watchEffect 比较，watch 允许我们：
+* 懒执行副作用；
+* 更具体地说明什么状态应该触发侦听器重新运行；
+* 访问侦听状态变化前后的值。
+
+watch 与 watchEffect共享停止侦听，清除副作用 (相应地 onInvalidate 会作为回调的第三个参数传入)、副作用刷新时机和侦听器调试行为。
+
+### watchEffect 刷新时机
+```js
+watchEffect(
+  () => {
+  },
+  {
+    flush: 'post'
+  }
+)
+```
+flush 值
+*  pre (默认) 将在组件更新前执行副作用
+*  post 将在组件更新后执行副作用
+*  sync 将强制效果始终同步触发。然而，这是低效的，应该很少需要。
+
+
+### watchEffect 侦听器调试--只能在开发模式下工作
+onTrack 和 onTrigger 选项可用于调试侦听器的行为。
+* onTrack 将在响应式 property 或 ref 作为依赖项被追踪时被调用。
+* onTrigger 将在依赖项变更导致副作用被触发时被调用。
+```js
+watchEffect(
+  () => {
+    /* 副作用 */
+  },
+  {
+    onTrigger(e) {
+      debugger
+    }
+  }
+)
+```
+
+
 ## [getCurrentInstance](/src/components/getCurrentInstance/index.vue)
 当前组件的实例
 
 ## [props、emit](/src/components/props-emit/index.vue)
+因为 props 是响应式的，你不能使用 ES6 直接解构，因为它会消除 prop 的响应性。
+
+通过 toRefs 解构
+```js
+setup(props) {
+	const { title } = toRefs(props)
+	console.log(title.value)
+}
+```
+
+context是非响应式
+```js
+export default {
+  // setup(props, { attrs, slots, emit }) {
+  setup(props, context) {
+    // Attribute (非响应式对象)
+    console.log(context.attrs)
+
+    // 插槽 (非响应式对象)
+    console.log(context.slots)
+
+    // 触发事件 (方法)
+    console.log(context.emit)
+  }
+}
+```
 
 ## [provide、inject](/src/components/provide-inject/index.vue)
+[使用 provide](https://v3.cn.vuejs.org/guide/composition-api-provide-inject.html#%E4%BD%BF%E7%94%A8-provide)
+
+provide 函数允许你通过两个参数定义 property：
+* property 的 name (\<String> 类型)
+* property 的 value
+
+如果要确保通过 provide 传递的数据不会被注入的组件更改，我们建议对提供者的 property 使用 readonly。
+
+[使用inject](https://v3.cn.vuejs.org/guide/composition-api-provide-inject.html#%E4%BD%BF%E7%94%A8%E6%B3%A8%E5%85%A5)
+
+inject 函数有两个参数：
+* 要注入的 property 的名称
+* 一个默认的值 (可选)
+
+
 
 ## [router,route](/src/components/router/index.vue)
 
@@ -389,7 +640,84 @@ export default {
 
 在vue3 利用CompositionAPI，通过在公用js导出，需要时 按需引入即可
 
-## 其他 import方法
+
+## [directives自定义指令](/src\directives\index.js)
+指令生命周期变更
+|vue2.x|vue3.x|
+|:--|:--
+|bind |beforeMount|
+|inserted|mounted|
+|update|移除，使用updated|
+||beforeUpdate|
+|componentUpdated|updated|
+||beforeUnmount|
+|unbind |unmounted|
+
+
+### v2.x 自定义指令
+钩子函数
+```js
+const MyDirective = {
+  bind(el, binding, vnode, prevVnode) {},
+  inserted() {},
+  update() {},
+  componentUpdated() {},
+  unbind() {}
+}
+Vue.directive('MyDirective', MyDirective)
+
+```
+binding对象属性
+* name：指令名，不包括 v- 前缀。
+* value 指令绑定的值
+* oldValue 指令绑定的前一个值
+* expression 字符串形式的指令表达式
+* arg 传给指令的参数
+* modifiers 一个包含修饰符的对象
+
+
+### v3.x自定义指令
+
+[指令生命周期](https://v3.cn.vuejs.org/guide/custom-directive.html#%E7%AE%80%E4%BB%8B)
+* beforeMount：当指令第一次绑定到元素并且在挂载父组件之前调用。在这里你可以做一次性的初始化设置。
+* mounted：在挂载绑定元素的父组件时调用。
+* beforeUpdate：在更新包含组件的 VNode 之前调用
+* updated：在包含组件的 VNode 及其子组件的 VNode 更新后调用。
+* beforeUnmount：在卸载绑定元素的父组件之前调用
+* unmounted：当指令与元素解除绑定且父组件已卸载时，只调用一次。
+
+[自定义指令 API 钩子函数的参数](https://v3.cn.vuejs.org/api/application-api.html#directive)
+* el 指令绑定到的元素。这可用于直接操作 DOM
+* binding：一个对象，包含以下属性：
+  * instance：使用指令的组件实例。
+  * value：传递给指令的值。例如，在 v-my-directive="1 + 1" 中，该值为 2。
+  * oldValue：先前的值，仅在 beforeUpdate 和 updated 中可用。值是否已更改都可用。
+  * arg：参数传递给指令 (如果有)。例如在 v-my-directive:foo 中，arg 为 "foo"。
+  * modifiers：包含修饰符 (如果有) 的对象。例如在 v-my-directive.foo.bar 中，修饰符对象为 {foo: true，bar: true}。
+  * dir：一个对象，在注册指令时作为参数传递。例如，在以下指令中
+* vnode：Vue 编译生成的虚拟节点。
+* prevVnode：上一个虚拟节点，仅在 beforeUpdate 和 updated 钩子中可用。
+
+```js
+// 定义
+const MyDirective = {
+  beforeMount(el,binding,vnode,prevNode){
+    console.log('beforeMount',el,binding,vnode,prevNode);
+  },
+  mounted(el,binding,vnode,prevNode){
+    console.log('mounted',el,binding,vnode,prevNode);
+  }
+  ...
+}
+
+// 注册
+const app = Vue.createApp({})
+app.directive('myDirective', MyDirective)
+
+// 使用
+<div v-myDirective:foo.stop="1+1"></div>
+```
+![](/src\assets\dir.png)
 
 
 
@@ -399,74 +727,10 @@ export default {
 ```
 
 ## [一个标签组件使用多个v-model](/src/components/others/vModels/index.vue)
-```js
-<my-com
-  v-model:name="name"
-  v-model:email="email"
-/>
-```
-
-例子:
-
-parent.vue
-```html
-<template>
-  <div>
-    <input v-model="name">
-    <input v-model="email">
-    <my-com
-      v-model:name="name"
-      v-model:email="email"
-    />
-  </div>
-</template>
-
-<script>
-import myCom from './B.vue'
-import { toRefs, reactive } from 'vue'
-export default {
-  components:{
-    myCom
-  },
-  setup(){
-    let state = reactive({
-      name: 'tom',
-      email: 'a@b.com'
-    })
-    return {
-      ...toRefs(state)
-    }
-  }
-}
-</script>
-<style lang="less">
-  .confirm-modal{
-    background-color: #fff;
-  }
-  #app{
-    height: 1000px;
-  }
-</style>
-```
-
-child.vue
-```html
-<template>
-<!--  -->
-<div>
-  <p>姓名：{{name}}</p>
-  <p>邮箱：{{email}}</p>
-</div>
-</template>
-<script>
-export default {
-  props: ['name','email'],
-};
-</script>
-```
+[多个 v-model 绑定](https://v3.cn.vuejs.org/guide/component-custom-events.html#%E5%A4%9A%E4%B8%AA-v-model-%E7%BB%91%E5%AE%9A)
 
 
-### 去掉了 .sync ，合并到了 v-model 里
+去掉了 .sync ，合并到了 v-model 里
 ```html
 <!-- vue 2.x -->
 <my-com v-bind:title.sync="title" />
@@ -475,6 +739,14 @@ export default {
 <my-com v-model:title="title" />
 
 ```
+
+
+## [ref](/src\components\others\ref\index.vue)获取模板内元素或组件实例的引用
+
+[ref](https://v3.cn.vuejs.org/guide/composition-api-template-refs.html#%E6%A8%A1%E6%9D%BF%E5%BC%95%E7%94%A8)
+
+[v-for 中的 Ref 数组](https://v3.cn.vuejs.org/guide/migration/array-refs.html#frontmatter-title)
+
 
 
 ## 全局组件注册
@@ -490,14 +762,26 @@ app.component('组件名',com)
 ```
 
 
-## 函数式组件
-\<template functional> 不再支持
-  >在3.x中，有状态组件和功能组件之间的性能差异已大大减少，在大多数使用情况下将不明显
+## [函数式组件](https://v3.cn.vuejs.org/guide/migration/functional-components.html#%E6%A6%82%E8%A7%88)
+\<template functional> 写法不再支持
+
+在 3.x 中，函数式组件 2.x 的性能提升可以忽略不计，因此我们建议只使用有状态的组件
+* 函数式组件只能使用接收 props 和 context 的普通函数创建 (即：slots，attrs，emit)。
+* 非兼容变更：functional attribute 在单文件组件 (SFC) \<template> 已被移除
+* 非兼容变更：{ functional: true } 选项在通过函数创建组件已被移除
+* 
 
 函数式组件必须写成函数
 
 ```js
 <!-- vue 2.x -->
+<template functional>
+  <div
+    v-bind="attrs"
+    v-on="listeners"
+  >Hello! {{props.name}}<div>
+</template>
+
 const FunctionalComp = {
   functional: true,
   render(h) {
@@ -506,6 +790,7 @@ const FunctionalComp = {
 }
     
 <!-- vue 3.x -->
+//  Vue 3 中，所有的函数式组件都是用普通函数创建的
 import { h } from 'vue'
 const FunctionalComp = (props, { slots, attrs, emit }) => {
   return h('div', `Hello! ${props.name}`)
@@ -513,15 +798,17 @@ const FunctionalComp = (props, { slots, attrs, emit }) => {
 
 ```
 
-## 异步组件
-由于组件被定义为纯函数，我们需要引入defineAsyncComponent实现异步
+## [异步组件](https://v3.cn.vuejs.org/guide/migration/async-components.html#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6)
+区别于Vue2.x
+* 引入 defineAsyncComponent ，用于显式地定义异步组件
+* component 选项重命名为 loader
+* Loader 函数本身不再接收 resolve 和 reject 参数，且必须返回一个 Promise
 
-[更多详情](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0026-async-component-api.md)
 ```js
-// v2.x
+// v2.x 不带选项的异步组件
 const Home = () => import('./Home.vue')
 
-// with options
+// v2.x 带选项的异步组件
 const Home = () => ({
   component: import('./Home.vue'),
   loading: LoadingComponent,
@@ -530,11 +817,11 @@ const Home = () => ({
   timeout: 3000
 })
 
-// v3.x
+// v3.x 不带选项的异步组件
 import { defineAsyncComponent } from 'vue'
 const Home = defineAsyncComponent(() => import('./Home.vue'))
 
-// with options
+// v3.x 带选项的异步组件
 const Home = defineAsyncComponent({
   loader: () => import("./Home.vue"),
   loadingComponent: LoadingComponent,
@@ -542,6 +829,21 @@ const Home = defineAsyncComponent({
   delay: 200,
   timeout: 3000
 })
+```
+
+loader 函数不再接收 resolve 和 reject 参数，且必须始终返回 Promise。
+```js
+// 2.x 版本
+const oldAsyncComponent = (resolve, reject) => {
+  /* ... */
+}
+
+// 3.x 版本
+const asyncComponent = defineAsyncComponent(
+  () => new Promise((resolve, reject) => {
+    /* ... */
+  })
+)
 ```
 
 ## render 渲染API
@@ -566,36 +868,11 @@ export default {
 }
 ```
 
+[更多用法](./render.md)
 
 
-## 自定义指令
-v2.x 钩子函数
-```js
-const MyDirective = {
-  bind(el, binding, vnode, prevVnode) {},
-  inserted() {},
-  update() {},
-  componentUpdated() {},
-  unbind() {}
-}
-Vue.directive('MyDirective', MyDirective)
-```
 
 
-v3.x
-```js
-const MyDirective = {
-  beforeMount(el, binding, vnode, prevVnode) {},
-  mounted() {},
-  beforeUpdate() {},
-  updated() {},
-  beforeUnmount() {},
-  unmounted() {}
-}
-
-const app = Vue.createApp({})
-app.directive('MyDirective', MyDirective)
-```
 
 ## Fragments 碎片
 vue2创建一个Vue组件，只能有一个根节点
@@ -619,7 +896,11 @@ vue3
 * 组件递归，可以实现平级递归，不会有多余的div了 这个在以后实现虚拟列表，tree组件的时候意义重大
 
 
-## Teleport
+## [Teleport](/src\components\teleport\index.vue)
+[Teleport-官网](https://v3.cn.vuejs.org/guide/teleport.html#teleport)
+
+[内置组件-Teleport](https://v3.cn.vuejs.org/api/built-in-components.html#teleport)
+
 \<Teleport\>原先是对标 React Portal（增加多个新功能，更强）
 
 但因为Chrome有个提案，会增加一个名为Portal的原生element，为避免命名冲突，改为Teleport
@@ -630,31 +911,24 @@ Teleport是特殊的组件，旨在在当前组件之外呈现某些内容。这
 
 vue2需通过portal-vue库实现
 
-```html
-<template>
-<div class="confirm-modal">
-  <button @click="isOpen = true">打开</button>
-  <!-- 注意这一块代码 -->
-  <Teleport to="#foot-container">
-    <div v-if="isOpen">
-      <p>底部信息底部信息底部信息底部信息底部信息底部信息</p>
-      <button @click="isOpen = false">取消</button>
-    </div>
-  </Teleport>
-</div>
-</template>
-<script>
-import {ref} from 'vue'
-export default {
-  setup(){
-    const isOpen = ref(false)
-    return {isOpen}
-  }
-}
-</script>
+
+### 组件属性
+* to: 必须是有效的查询选择器或 HTMLElement
+  >类型：string
+```js
+<!-- 正确 -->
+<teleport to="body" />
+<teleport to="#some-id" />
+<teleport to=".some-class" />
+<teleport to="[data-teleport]" />
+
+<!-- 错误 -->
+<teleport to="h1" />
+<teleport to="some-string" />
 ```
 
-[更多详情](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0025-teleport.md)
+* disabled： 用于禁用 \<teleport> 的功能，这意味着其插槽内容将不会移动到任何位置，而是在您在周围父组件中指定了 \<teleport> 的位置渲染。
+  >类型：boolean
 
 ## Suspense组件
 * 可在嵌套层级中等待嵌套的异步依赖项
@@ -673,3 +947,13 @@ export default {
 </Suspense>
 ```
 
+## 移除特性
+* filters 过滤器
+* mixins 混入
+...
+
+## 其他
+[v-if 与 v-for 的优先级对比](https://v3.cn.vuejs.org/guide/migration/v-if-v-for.html#%E6%A6%82%E8%A7%88)
+2.x 版本中在一个元素上同时使用 v-if 和 v-for 时，v-for 会优先作用
+
+`3.x 版本中 v-if 总是优先于 v-for 生效`

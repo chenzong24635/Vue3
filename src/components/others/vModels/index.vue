@@ -1,17 +1,19 @@
 <template>
-<!-- 多个v-model同时使用 -->
-  <input v-model="name">
+  <!-- 多个v-model同时使用 -->
+  <!-- <input v-model="name">
   <input v-model="email">
-  <my-com  v-model:name="name" v-model:email="email" ></my-com>
+  <my-com  v-model:name="name" v-model:email="email" ></my-com> -->
+
+  <p>{{name}}</p>
+  <p>{{email}}</p>
+  <my-com  v-model:name.trim="name" v-model:email="email" ></my-com>
 </template>
 
 <script>
-import myCom from './child.vue'
-import { toRefs, reactive } from 'vue'
+import { toRefs, reactive, defineAsyncComponent } from 'vue'
 export default {
   components:{
-    myCom,
-    // myCom: defineAsyncComponent(()=>import('./a.vue'))
+    myCom: defineAsyncComponent(()=>import('./child.vue'))
   },
   setup(){
     let state = reactive({

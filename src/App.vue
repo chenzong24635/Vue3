@@ -1,14 +1,11 @@
 <template>
     <div id="nav">
-
-      <router-link 
+      <div
         v-for="item in routes"
         :key="item.name"
-        :to="item.path"
       >
-        {{item.name}}
-      </router-link>
-
+        <router-link  :to="item.path">{{item.name}}</router-link>
+      </div>
       <p style="border-top:1px solid #ddd"></p>
     </div>
     <router-view/>
@@ -36,10 +33,9 @@ export default {
   padding: 30px 0;
 
   a {
-    display: block;
-    margin: 10px 0;
+    display: inline-block;
+    margin: 5px 0;
     font-weight: bold;
-
     &.router-link-exact-active {
       color: #42b983;
     }

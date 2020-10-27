@@ -33,6 +33,7 @@ export default {
   },
   setup() {
     const num = ref(0)
+    console.log('初始化调用的生命周期---');
     console.log('setup');
 
     onBeforeMount(() => {
@@ -51,6 +52,7 @@ export default {
     })
 
     onBeforeUnmount(() => {
+      console.log('组件销毁调用的生命周期---');
       console.log('onBeforeUnmount')
     })
     onUnmounted(() => {
@@ -66,10 +68,12 @@ export default {
     })
     onRenderTriggered(() => {
       console.log('onRenderTriggered', '')
+      // debugger;
     })
 
     const methods = {
       add() {
+        console.log('以下是数据更新调用的生命周期---');
         num.value++
       }
     }

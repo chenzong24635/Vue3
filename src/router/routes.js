@@ -78,10 +78,34 @@ export const routes = [
   //   // ]
   // },
   {
+    path: '/teleport',
+    name: 'teleport',
+    component: defineAsyncComponent(() => import('@/components/teleport/index.vue')),
+    meta: { title: 'teleport'},
+  },
+  {
+    path: '/suspense',
+    name: 'suspense',
+    component: defineAsyncComponent(() => import('@/components/suspense/index.vue')),
+    meta: { title: 'suspense'},
+  },
+  {
     path: '/vModels',
     name: 'vModels',
     component: defineAsyncComponent(() => import('@/components/others/vModels/index.vue')),
     meta: { title: '多个v-model'},
+  },
+  {
+    path: '/ref',
+    name: 'ref',
+    component: defineAsyncComponent(() => import('@/components/others/ref/index.vue')),
+    meta: { title: 'ref组件实例'},
+  },
+  {
+    path: '/render',
+    name: 'render',
+    component: defineAsyncComponent(() => import('@/components/render/index.vue')),
+    meta: { title: 'render'},
   },
   {
     path: '/:catchAll(.*)',

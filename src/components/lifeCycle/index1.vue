@@ -19,7 +19,7 @@ import {
 
 export default {
   setup() {
-    console.log('--------');
+    console.log('新页面--------');
     console.log('setup');
     
     onBeforeMount(() => {

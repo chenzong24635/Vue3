@@ -40,8 +40,6 @@ export default {
       store.commit('setUserAge', Math.floor(Math.random()*100))
     }
 
-    
-
     return {
       storeState,
       update,

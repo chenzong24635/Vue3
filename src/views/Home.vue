@@ -1,21 +1,24 @@
 <template>
-  <div class="test">
+  <div class="test" v-myDirective:foo.stop="1+1">
+    x:{{x}};
+    y:{{y}}
   </div>
 </template>
 
 <script >
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineComponent, getCurrentInstance } from 'vue'
 
-export default {
-
-
+export default defineComponent({
   setup() {
     const { x, y } = useMouse()
-
-    
+    const {ctx} = getCurrentInstance()
+    console.log(ctx.$api);
     return { x, y }
+  },
+  created(){
+    console.log('$api',this.$api);
   }
-}
+})
 
 // 可以看到，useMouse 将所有与 “处理鼠标位置” 相关的逻辑都封装了进去，乍一看与 React Hooks 很像，但是有两个区别：
 // useMouse 函数内改变 x、y 后，不会重新触发 setup 执行。
@@ -46,4 +49,6 @@ function useMouse() {
 
   return { x, y }
 }
+
+
 </script>
