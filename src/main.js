@@ -8,4 +8,5 @@ const app = createApp(App)
 app.config.globalProperties.$api = ()=>{
   console.log('全局方法');
 }
+app.config.globalProperties.msg = 'fdaaaffa'
 app.use(customDirectives).use(router).use(store).mount('#app')

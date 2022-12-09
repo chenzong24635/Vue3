@@ -308,6 +308,7 @@ import {
 
 ## [生命周期](/src/components/lifeCycle/index.vue)
 
+
 ### 2.x生命周期选项和Composition API之间的映射
 * beforeCreate -> 使用 setup()
 * created -> 使用 setup()
@@ -318,7 +319,7 @@ import {
 * beforeDestroy -> onBeforeUnmount
 * destroyed -> onUnmounted
 * errorCaptured -> onErrorCaptured
-* onRenderTracked, 新增
+* onRenderTracked, 新增 
 * onRenderTriggered, 新增
 
 两个新增的钩子都接收DebuggerEvent类似于onTrack和onTrigger观察者的选项;它使我们能够知道是什么导致了Vue实例中的重新渲染。
@@ -339,32 +340,24 @@ onRenderTriggered(()=>{
 ### 生命周期调用顺序 
 ```js
 // 创建
-
 setup ->
 beforeCreate ->
 created ->
-onRenderTracked ->
 onBeforeMount ->
 onRenderTracked ->
 onMounted ->
 onRenderTriggered  ->
-onRenderTracked  ->
 onBeforeUpdate  ->
 onUpdated  ->
 
 // 更新
 onRenderTriggered ->
-onRenderTracked  ->
 onBeforeUpdate ->
 onUpdated ->
 
 // 销毁
-旧 onBeforeUnmount  ->
-新 setup  ->
-新 onRenderTracked ->
-新 onBeforeMount  ->
-旧 onUnmounted  ->
-新 onMounted  ->
+onBeforeUnmount  ->
+onUnmounted  ->
 ```
 
 ## [setup()](/src/components/setup/index.vue)
@@ -450,7 +443,7 @@ watchEffect(
 flush 值
 *  pre (默认) 将在组件更新前执行副作用
 *  post 将在组件更新后执行副作用
-*  sync 将强制效果始终同步触发。然而，这是低效的，应该很少需要。
+*  sync 始终同步触发。然而，这是低效的，应该很少需要。
 
 
 ### watchEffect 侦听器调试--只能在开发模式下工作

@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <p>age--- {{age}}</p>
+    <p ref="refP">age--- {{age}}</p>
     <p>number--- {{number}}</p>
     <p>obj--- {{obj}}</p>
     <button @click="add">add</button>
@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import { ref, reactive, toRefs, watch, watchEffect,  } from 'vue'
+import {onBeforeUpdate,ref, reactive, toRefs, watch, watchEffect,onUpdated  } from 'vue'
 
 export default {
   setup() {
@@ -21,21 +21,23 @@ export default {
         arr: [1,2,3]
       }
     })
-    const number = ref(0)
+    let number = ref(111)
+    let refP = ref({value:1})
     console.log(number);
 
     state.age = 666
 
     // watch监听某个响应对象
     const stopWatch = watch(
-      number, // 直接监听ref
+      // number, // 直接监听ref
+      () => state.obj,
       // () => state.age, //监听一个 getter
       // () => state.obj,
       (val, prevVal) => {
         console.log(`watch: 新值： ${val}; 旧值： ${prevVal}`)
       },
       {
-        // deep: true, // 深度监听
+        deep: true, // 深度监听
         immediate: true // 立即执行
       }
     )
@@ -63,18 +65,26 @@ export default {
     // 对于函数里面的响应式依赖会进行监听，然后当依赖发生变化时，会重新调用传入的函数
     const stopWatchEffect = watchEffect(
       () => {
-        console.log('watchEffect--- age:', state.age)
+        console.log('watchEffect--- age:', state.age,refP && refP.value.outerHTML)
       },
       {
         flush: 'post', //在组件更新后重新运行侦听器副作用
         // onTrigger(e) { // 侦听器调试
-        //   console.log(e);
+        //   console.log(e);v-cloak
         //   debugger
         // }
       }
     )
+   
+    onBeforeUpdate(() => {
+      console.log('onBeforeUpdate',refP.value.outerHTML);
+      
+    })
+    onUpdated(() => {
+      // state.age += 1
+      console.log('onUpdated',refP.value.outerHTML);
+    })
     
-
     const methods = {
       add() {
         state.obj.name = 333
@@ -96,6 +106,7 @@ export default {
     return {
       ...toRefs(state),
       number,
+      refP,
       ...methods
     }
   }

@@ -7,6 +7,11 @@
   <p>{{name}}</p>
   <p>{{email}}</p>
   <my-com  v-model:name.trim="name" v-model:email="email" ></my-com>
+  <input :value="searchText" @input="searchText = $event.target.value">
+  <my-com
+    :modelValue="searchText"
+    @update:modelValue="newValue => searchText = newValue"
+  />
 </template>
 
 <script>
@@ -18,7 +23,8 @@ export default {
   setup(){
     let state = reactive({
       name: 'tom',
-      email: 'a@b.com'
+      email: 'a@b.com',
+      searchText: 'abc'
     })
     return {
       ...toRefs(state)

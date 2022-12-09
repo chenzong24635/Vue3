@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <p style="margin-bottom:60px">刷新页面查看有个过渡效果</p>
+    <p style="margin-bottom:60px"></p>
     <Suspense>
       <template #default>
         <v-child />
@@ -20,7 +20,13 @@ export default {
   },
   setup () {
     
-  }
+  },
+  activated() {
+    
+  },
+  deactivated() {
+    
+  },
 }
 </script>
 <style scoped >

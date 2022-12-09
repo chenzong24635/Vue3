@@ -33,6 +33,8 @@ export default {
   },
   setup() {
     const num = ref(0)
+    const num1 = ref(1)
+
     console.log('初始化调用的生命周期---');
     console.log('setup');
 
@@ -63,11 +65,11 @@ export default {
       console.log('onErrorCaptured')
     })
 
-    onRenderTracked(() => {
-      console.log('onRenderTracked', '')
+    onRenderTracked((event) => {
+      console.log('onRenderTracked', '渲染的时候可以追踪到',event)
     })
-    onRenderTriggered(() => {
-      console.log('onRenderTriggered', '')
+    onRenderTriggered((event) => {
+      console.log('onRenderTriggered', '数据更新时触发',event)
       // debugger;
     })
 
@@ -75,10 +77,13 @@ export default {
       add() {
         console.log('以下是数据更新调用的生命周期---');
         num.value++
+        num1.value++
+
       }
     }
     return {
       num,
+      num1,
       ...methods
     }
   }

@@ -18,7 +18,7 @@ export default {
     // 必须在最后return refA，组件必须绑定ref属性(ref="refA")
     onMounted(() => {
       //获取子组件实例，调用其内部函数
-      console.log(1,refA)
+      console.log('refA',refA)
     })
 
     let lists = reactive([1,2,3])

@@ -15,9 +15,16 @@ export default {
   setup() {
     const state = reactive({
       age: 11,
-      age1: computed(()=> state.age - 111) 
+      
     })
-
+let age1= computed({
+        get(){
+         return state.age
+        },
+        set(val){
+          return val;
+        }
+      }) 
     //computed--函数的方式
     const count = computed(()=> 'age:' + state.age)
     console.log(count);
@@ -31,9 +38,11 @@ export default {
         state.age = val;
       }
     })
-
     state.age = 666
+    state.age1 = 1
+
     console.log(userMsg)
+    console.log(state,state.age,age1,'--');
 
     const methods = {
       add() {
@@ -43,6 +52,7 @@ export default {
 
     return {
       ...toRefs(state),
+      age1,
       count,
       userMsg,
       ...methods
